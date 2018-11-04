@@ -38,7 +38,7 @@ class AccountComponent extends Component {
 
   saveProfile = this.saveProfile.bind(this);
   goToUpload = this.goToUpload.bind(this);
-
+  goToSend = this.goToSend.bind(this);
 
   componentDidMount() {
     this.fetchProfileData();
@@ -106,6 +106,11 @@ class AccountComponent extends Component {
               bio: this.state.bio,
               admin: this.state.admin,
             });
+
+            user.updateProfile({
+              displayName: this.state.username,
+            })
+
         } else {
           console.log("Logged in");
         }
@@ -124,6 +129,9 @@ class AccountComponent extends Component {
     this.props.history.push('/upload');
   }
 
+  goToSend() {
+    this.props.history.push('/sendmessage');
+  }
 
   render() {
     {
@@ -148,6 +156,9 @@ class AccountComponent extends Component {
             <br />
             <Button bsStyle="primary" onClick={this.goToUpload}>
               Upload Icons
+            </Button>{" "}
+            <Button bsStyle="primary" onClick={this.goToSend}>
+              Send Iconic Message!
             </Button>{" "}
 
             <form onSubmit={event => this.saveProfile(event)}>

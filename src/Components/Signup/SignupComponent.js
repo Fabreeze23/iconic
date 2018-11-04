@@ -72,6 +72,9 @@ class SignupComponent extends Component {
             admin: optionsVal,
           });
 
+          user.updateProfile({
+            displayName: usernameVal,
+          })
         this.setState({
           signedUp: true
         });

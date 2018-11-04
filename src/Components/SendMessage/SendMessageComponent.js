@@ -194,6 +194,7 @@ updates[`messages/messagesSent/${sendingUser}/${selectedUser}/${messageKey}`] = 
 updates[`messages/messagesReceived/${selectedUser}/${sendingUser}/${messageKey}`] = messageSent;
 updates[`/user-received/${selectedUser}/${messageKey}`] = messageSent;
 updates[`/user-sent/${sendingUser}/${messageKey}`] = messageSent;
+updates[`/user-received/${selectedUser}/${messageKey}`] = messageSent;
 
 
 console.log(messageSent);
