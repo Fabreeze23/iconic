@@ -5,24 +5,23 @@ import firebase from "firebase";
 import FileUploader from "react-firebase-file-uploader";
 import InputGroup from "react-bootstrap/lib/InputGroup";
 import Button from "react-bootstrap/lib/Button";
+import ListGroup from "react-bootstrap/lib/ListGroup";
+import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
+
 
 
 import './style.css';
 
-const avatarFallbackImage =
-  "https://s3.amazonaws.com/onename/avatar-placeholder.png";
-
 // File upload for the icon. Name is required, I normally would use redux form.
 
 
-export default class IconUploadComponent extends Component {
+export default class IconListComponent extends Component {
   constructor(props) {
     super(props);
 
 
     this.state = {
 
-      userId: this.props.userId,
       isUploading: false,
 
       image: null,
@@ -36,35 +35,41 @@ export default class IconUploadComponent extends Component {
 
   componentDidMount() {
 
-    var myUserId = this.state.userId;
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        var myUserId = user.uid;
+        console.log(myUserId);
+        var myIconsRef = firebase.database().ref(`/icons/${myUserId}/`);
 
-    var myIconsRef = firebase.database().ref(`/icons/${myUserId}/`);
+            var iconList = [];
 
-        var iconList = [];
+            myIconsRef.on('child_added', (dataSnapshot) => {
 
-        myIconsRef.on('child_added', (dataSnapshot) => {
+              console.log(dataSnapshot.val());
+              iconList.push(dataSnapshot.val());
+              console.log(iconList);
+               this.setState({
+                 iconList: iconList.reverse(),
 
-          console.log(dataSnapshot.val());
-          iconList.push(dataSnapshot.val());
-          console.log(iconList);
-           this.setState({
-             iconList: iconList
-
-           }, console.log(iconList));
-        });
+               }, console.log(iconList));
+            });
+      } else {
+        console.log("Not logged in");
+      }
+    });
 
   }
 
 renderIconList(icon) {
    var shortenedName = icon.name.substring(0, icon.name.length-4);
     return (
-      <div class="listbox-area">
-        <li key={icon.id} name="icon">
-          {shortenedName}
+      <div >
+        <ListGroupItem key={icon.id} name="icon" className="icon">
           <img
            src={icon.url}
            />
-        </li>
+           <h3>{shortenedName}</h3>
+        </ListGroupItem>
 
 
         </div>
@@ -79,10 +84,10 @@ renderIconList(icon) {
         <div>
 
           <center>
-            <div>
-              {this.state.iconList.map(this.renderIconList)}
-            </div>
+            <ListGroup>
 
+              {this.state.iconList.map(this.renderIconList)}
+            </ListGroup>
 
           </center>
 
@@ -90,14 +95,11 @@ renderIconList(icon) {
       );
       }
 
-      else {
-
         return (
           <div>
-            {" "}
+            No icons!
           </div>
         );
-      }
 
     }
 

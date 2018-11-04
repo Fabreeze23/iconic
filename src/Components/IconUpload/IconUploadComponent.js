@@ -36,50 +36,15 @@ export default class IconUploadComponent extends Component {
       uploadMessage: '',
       iconName: '',
       emptyName: true,
-      iconList: [],
     };
 
     this.checkLoggedIn = this.checkLoggedIn.bind(this);
-    this.renderIconList = this.renderIconList.bind(this);
   }
 
   componentDidMount() {
     this.checkLoggedIn();
 
-    var myUserId = this.state.userId
-
-    var myIconsRef = firebase.database().ref(`/icons/${myUserId}/`);
-
-        var iconList = [];
-
-        myIconsRef.on('child_added', (dataSnapshot) => {
-
-          console.log(dataSnapshot.val());
-          iconList.push(dataSnapshot.val());
-          console.log(iconList);
-           this.setState({
-             iconList: iconList
-
-           }, console.log(iconList));
-        });
-
   }
-
-renderIconList(icon) {
-   var shortenedName = icon.name.substring(0, icon.name.length-4);
-    return (
-      <div class="listbox-area">
-        <li key={icon.id} name="icon">
-          {shortenedName}
-          <img
-           src={icon.url}
-           />
-        </li>
-
-
-        </div>
-       )
-}
 
   // The file name will be set to state
   //handleIconName = this.handleIconName.bind(this);
@@ -87,7 +52,6 @@ renderIconList(icon) {
 // Standard non redux function checking for being logged in.
   checkLoggedIn() {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
         if (user) {
           var userId = user.uid;
           console.log(userId);
@@ -106,8 +70,8 @@ renderIconList(icon) {
 
           return (user);
         }
-      } else {
-        return (null);
+        else {
+          return (null);
       }
     });
   }
@@ -196,16 +160,18 @@ renderIconList(icon) {
                   <h4 className="uploadMessage">
                     {this.state.uploadMessage}
                   </h4>
-
+                  <IconListComponent />
             </form>
 
 
-          <IconUploadComponent userId={this.state.userId} />
+
 
 
           </center>
 
         </div>
+
+
       );
       }
 
