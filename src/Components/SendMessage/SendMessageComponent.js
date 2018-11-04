@@ -13,8 +13,6 @@ import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
 
 import './style.css';
 
-// File upload for the icon. Name is required, I normally would use redux form.
-
 
 export default class SendMessageComponent extends Component {
   constructor(props) {
@@ -31,7 +29,7 @@ export default class SendMessageComponent extends Component {
       avatarURL: "",
       image: null,
       url: '',
-      uploadMessage: '',
+      successMessage: '',
 
 
       iconName: '',
@@ -42,11 +40,15 @@ export default class SendMessageComponent extends Component {
       emptyUsername: true,
       emptyMessage: true,
       iconList: [],
+
+
     };
 
     this.checkLoggedIn = this.checkLoggedIn.bind(this);
     this.renderIconList = this.renderIconList.bind(this);
     this.iconSelected = this.iconSelected.bind(this);
+    this.onMessageSubmit = this.onMessageSubmit.bind(this);
+
   }
 
   componentDidMount() {
@@ -107,7 +109,7 @@ export default class SendMessageComponent extends Component {
      var shortenedName = icon.name.substring(0, icon.name.length-4);
       return (
         <div >
-          <ListGroupItem listItem={true} key={icon.id} name="icon" className="icon" onClick={() => this.iconSelected(icon)}  >
+          <ListGroupItem key={icon.id} name="icon" className="icon" onClick={() => this.iconSelected(icon)}  >
             <img
              src={icon.url}
              />
@@ -168,6 +170,42 @@ export default class SendMessageComponent extends Component {
     console.log(icon.url);
   }
 
+//=============================
+
+  onMessageSubmit(event) {
+    event.preventDefault();
+    event.target.reset();
+    var selectedUser = this.state.selectedUsername;
+    var sendingUser = this.state.username;
+
+    event.preventDefault();
+
+    var messageSent = {
+    to: selectedUser,
+    from: sendingUser,
+    messageBody: this.state.createdMessage,
+    iconUrl: this.state.selectedUrl,
+}
+
+var messageKey = firebase.database().ref().child('messages').push().key;
+
+var updates = {};
+updates[`messages/messagesSent/${sendingUser}/${selectedUser}/${messageKey}`] = messageSent;
+updates[`messages/messagesReceived/${selectedUser}/${sendingUser}/${messageKey}`] = messageSent;
+updates[`/user-received/${selectedUser}/${messageKey}`] = messageSent;
+updates[`/user-sent/${sendingUser}/${messageKey}`] = messageSent;
+
+
+console.log(messageSent);
+
+this.setState({
+  successMessage: `Your message was sent to ${this.state.selectedUsername}`,
+})
+
+return firebase.database().ref().update(updates);
+
+
+  }
 
   render() {
 
@@ -181,7 +219,7 @@ export default class SendMessageComponent extends Component {
           <br />
           <br />
           <center>
-            <form className="message-upload">
+            <form className="message-upload" onSubmit={event => this.onMessageSubmit(event)}>
                   <h2> {this.state.firstName} you should send a message with your icons!</h2>
 
                   <input type="text" placeholder="username to send to" name="username" onChange={(event) => this.handleUsername(event)} required/>
@@ -189,6 +227,9 @@ export default class SendMessageComponent extends Component {
                   <input type="text" placeholder="type your message here" name="message" onChange={(event) => this.handleMessage(event)} required/>
 
                   <Button bsStyle="primary" type="submit" disabled={this.state.emptyIcon || this.state.emptyUsername || this.state.emptyMessage}> Send</Button>
+
+                  <h4>{this.state.successMessage}</h4>
+
                   <ListGroup>
 
                     {this.state.iconList.map(this.renderIconList)}
