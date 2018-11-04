@@ -23,6 +23,7 @@ class SignupComponent extends Component {
   saveSignupInput(event) {
     event.preventDefault();
     const inputs = event.target.getElementsByTagName("input");
+    const options = event.target.getElementsByTagName("option");
 
     var email = inputs.email.value;
     var password = inputs.password.value;
@@ -32,6 +33,7 @@ class SignupComponent extends Component {
     var lastNameVal = inputs.lastName.value;
     var ageVal = inputs.age.value;
     var bioVal = inputs.bio.value;
+    var optionsVal = options.admin.value;
 
     firebase
       .auth()
@@ -66,7 +68,8 @@ class SignupComponent extends Component {
             firstName: firstNameVal,
             lastName: lastNameVal,
             age: ageVal,
-            bio: bioVal
+            bio: bioVal,
+            admin: optionsVal,
           });
 
         this.setState({
@@ -94,6 +97,9 @@ class SignupComponent extends Component {
 
         <form className="form-signin" onSubmit={event => this.saveSignupInput(event)}>
           <br />
+          <br />
+
+          <br />
           <input type="text" placeholder="First Name" name="firstName" />
           <br />
           <br />
@@ -106,6 +112,11 @@ class SignupComponent extends Component {
           <br />
           <br />
 
+          <select>
+            <option value="false" name="admin">Not Admin</option>
+            <option value="true" name="admin" >Admin</option>
+
+          </select>
           <input type="text" placeholder="Bio" name="bio" />
           <br />
           <br />

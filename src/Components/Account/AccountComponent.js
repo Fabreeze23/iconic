@@ -7,7 +7,7 @@ import firebase from "firebase";
 import SignupComponent from "../Signup/SignupComponent";
 import LoginComponent from "../Login/LoginComponent";
 import LogoutComponent from "../Logout/LogoutComponent";
-
+import SendMessageComponent from "../SendMessage/SendMessageComponent";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { Redirect } from "react-router";
@@ -28,6 +28,7 @@ class AccountComponent extends Component {
       age: "",
       bio: "",
       username: "",
+      admin: "",
 
       uploadClicked: false,
     };
@@ -61,7 +62,8 @@ class AccountComponent extends Component {
               firstName: snapshot.val().firstName,
               lastName: snapshot.val().lastName,
               age: snapshot.val().age,
-              bio: snapshot.val().bio
+              bio: snapshot.val().bio,
+              admin: snapshot.val().admin,
             });
           });
 
@@ -101,7 +103,8 @@ class AccountComponent extends Component {
               firstName: this.state.firstName,
               lastName: this.state.lastName,
               age: this.state.age,
-              bio: this.state.bio
+              bio: this.state.bio,
+              admin: this.state.admin,
             });
         } else {
           console.log("Logged in");

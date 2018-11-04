@@ -7,6 +7,7 @@ import SignupComponent from './Components/Signup/SignupComponent';
 import LoginComponent from './Components/Login/LoginComponent';
 import AccountComponent from './Components/Account/AccountComponent';
 import IconUploadComponent from './Components/IconUpload/IconUploadComponent';
+import SendMessageComponent from './Components/SendMessage/SendMessageComponent';
 
 
 // Initialize Firebase
@@ -54,7 +55,10 @@ class App extends Component {
           component={SignupComponent}
         />
 
-
+        <Route
+          path='/sendmessage'
+          component={SendMessageComponent}
+        />
           </div>
         </Router>
     );

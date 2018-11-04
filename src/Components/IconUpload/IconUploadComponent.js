@@ -12,9 +12,6 @@ import Button from "react-bootstrap/lib/Button";
 
 import './style.css';
 
-const avatarFallbackImage =
-  "https://s3.amazonaws.com/onename/avatar-placeholder.png";
-
 // File upload for the icon. Name is required, I normally would use redux form.
 
 
